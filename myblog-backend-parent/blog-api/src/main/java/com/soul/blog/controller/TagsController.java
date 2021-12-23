@@ -1,0 +1,25 @@
+package com.soul.blog.controller;
+
+import com.soul.blog.service.TagService;
+import com.soul.blog.vo.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * controller for getting tag
+ */
+@RestController
+@RequestMapping("tags")
+public class TagsController {
+
+  @Autowired
+  private TagService tagService;
+
+  @GetMapping("hot")
+  public Result findHotTags() {
+    int limit = 6;
+    return tagService.findHotTags(limit);
+  }
+}
