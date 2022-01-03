@@ -1,4 +1,4 @@
-package com.soul.blog.vo;
+package com.soul.blog.dao.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TagVo {
+public class ArticleTag {
 
-    private Long id;  // why not Long?
+    private Long id;
 
-    private String tagName;
+    private Long articleId;
 
-    private String avatar;
+    private Long tagId;
 }

@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TagVo {
+public class UserVo {
 
-    private Long id;  // why not Long?
-
-    private String tagName;
+    private String nickname;
 
     private String avatar;
+
+    private String id;
 }

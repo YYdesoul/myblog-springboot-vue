@@ -8,6 +8,8 @@ import com.soul.blog.service.SysUserService;
 import com.soul.blog.vo.ErrorCode;
 import com.soul.blog.vo.LoginUserVo;
 import com.soul.blog.vo.Result;
+import com.soul.blog.vo.UserVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,20 @@ public class SysUserServiceImpl implements SysUserService {
 
   @Autowired
   private LoginService loginService;
+
+  @Override
+  public UserVo findUserVoById(Long id) {
+    SysUser sysUser = sysUserMapper.selectById(id);
+    UserVo userVo = new UserVo();
+
+    if (sysUser == null) {
+      return UserVo.builder().nickname("de_soul").avatar("null").build();
+    }
+
+    BeanUtils.copyProperties(sysUser, userVo);
+
+    return userVo;
+  }
 
   @Override
   public SysUser findUserById(Long id) {

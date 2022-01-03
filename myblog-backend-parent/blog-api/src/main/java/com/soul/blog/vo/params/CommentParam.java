@@ -1,4 +1,4 @@
-package com.soul.blog.vo;
+package com.soul.blog.vo.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TagVo {
+public class CommentParam {
 
-    private Long id;  // why not Long?
+    private Long articleId;
 
-    private String tagName;
+    private String content;
 
-    private String avatar;
+    private Long parent;
+
+    private Long toUserId;
 }

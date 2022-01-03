@@ -9,34 +9,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ArticleVo {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommentVo {
 
+    //防止前端 精度损失 把id转为string
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;
+    private String id;
 
-    private String title;
+    private UserVo author;
 
-    private String summary;
+    private String content;
 
-    private Integer commentCounts;
+    private List<CommentVo> childrens;
 
-    private Integer viewCounts;
-
-    private Integer weight;
-    /**
-     * 创建时间
-     */
     private String createDate;
 
-    private String author;
+    private Integer level;
 
-    private ArticleBodyVo body;
-
-    private List<TagVo> tags;
-
-    private CategoryVo category;
-
+    private UserVo toUser;
 }

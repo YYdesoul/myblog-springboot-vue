@@ -2,9 +2,12 @@ package com.soul.blog.controller;
 
 import com.soul.blog.service.CommentsService;
 import com.soul.blog.vo.Result;
+import com.soul.blog.vo.params.CommentParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +19,13 @@ public class CommentsController {
     private CommentsService commentsService;
 
     // /comments/article/{id}
-    @PostMapping("article/{id}")
+    @GetMapping("article/{id}")
     public Result comments (@PathVariable("id") Long id) {
-//            return null;
         return commentsService.commentsByArticleId(id);
+    }
+
+    @PostMapping("create/change")
+    public Result comment(@RequestBody CommentParam commentParam) {
+        return commentsService.comment(commentParam);
     }
 }

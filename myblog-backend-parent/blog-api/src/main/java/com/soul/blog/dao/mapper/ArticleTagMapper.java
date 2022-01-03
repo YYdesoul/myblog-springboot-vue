@@ -1,9 +1,9 @@
 package com.soul.blog.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.soul.blog.dao.pojo.Comment;
+import com.soul.blog.dao.pojo.ArticleTag;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommentsMapper extends BaseMapper<Comment> {
+public interface ArticleTagMapper extends BaseMapper<ArticleTag> {
 }

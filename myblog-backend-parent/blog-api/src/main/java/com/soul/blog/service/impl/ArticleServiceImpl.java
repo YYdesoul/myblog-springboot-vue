@@ -6,17 +6,21 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soul.blog.dao.dos.Archives;
 import com.soul.blog.dao.mapper.ArticleBodyMapper;
 import com.soul.blog.dao.mapper.ArticleMapper;
+import com.soul.blog.dao.mapper.ArticleTagMapper;
 import com.soul.blog.dao.pojo.ArticleBody;
+import com.soul.blog.dao.pojo.ArticleTag;
 import com.soul.blog.dao.pojo.SysUser;
 import com.soul.blog.service.ArticleService;
 import com.soul.blog.service.CategoryService;
 import com.soul.blog.service.SysUserService;
 import com.soul.blog.service.TagService;
 import com.soul.blog.service.ThreadService;
+import com.soul.blog.utils.UserThreadLocal;
 import com.soul.blog.vo.ArticleBodyVo;
 import com.soul.blog.vo.ArticleVo;
 import com.soul.blog.vo.Result;
 import com.soul.blog.vo.TagVo;
+import com.soul.blog.vo.params.ArticleParam;
 import com.soul.blog.vo.params.PageParams;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +52,9 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Autowired
   private ArticleBodyMapper articleBodyMapper;
+
+  @Autowired
+  private ArticleTagMapper articleTagMapper;
 
 
 
@@ -110,6 +117,53 @@ public class ArticleServiceImpl implements ArticleService {
     ArticleVo articleVo = copy(article, true, true, true, true);
     threadService.updateArticleViewCount(articleMapper, article);
 
+    return Result.success(articleVo);
+  }
+
+  @Override
+  public Result publish(ArticleParam articleParam) {
+    // 此接口 要加入到登录拦截当中
+    SysUser sysUser = UserThreadLocal.get();
+
+    /**
+     * 1. 发布文章 目的 构建Article对象
+     * 2. 作者id 当前登录的用户
+     * 3. 标签 要将标签加入到关联列表当中
+     * 4. body 内容存储
+     */
+    Article article = Article.builder()
+        .authorId(sysUser.getId())
+        .weight(Article.Article_Common)
+        .viewCounts(0)
+        .title(articleParam.getTitle())
+        .summary(articleParam.getSummary())
+        .commentCounts(0)
+        .createDate(System.currentTimeMillis())
+        .categoryId(articleParam.getCategory().getId())
+        .build();
+    this.articleMapper.insert(article);
+    // tag
+    List<TagVo> tagVos = articleParam.getTags();
+    if (tagVos != null) {
+      for (TagVo tagVo : tagVos) {
+        Long articleId = article.getId();
+        ArticleTag articleTag = ArticleTag.builder()
+            .tagId(tagVo.getId())
+            .articleId(articleId)
+            .build();
+      articleTagMapper.insert(articleTag);
+      }
+    }
+    // article body
+    ArticleBody articleBody = ArticleBody.builder()
+        .articleId(article.getId())
+        .content(articleParam.getBody().getContent())
+        .contentHtml(articleParam.getBody().getContentHtml())
+        .build();
+    articleBodyMapper.insert(articleBody);
+    article.setBodyId(articleBody.getId());
+    articleMapper.updateById(article);
+    ArticleVo articleVo = ArticleVo.builder().id(article.getId()).build();
     return Result.success(articleVo);
   }
 
