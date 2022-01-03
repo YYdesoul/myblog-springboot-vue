@@ -161,7 +161,7 @@ CREATE TABLE `ms_comment`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT,
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `create_date` bigint(0) NOT NULL,
-  `article_id` int(0) NOT NULL,
+  `article_id` bigint(0) NOT NULL,
   `author_id` bigint(0) NOT NULL,
   `parent_id` bigint(0) NOT NULL,
   `to_uid` bigint(0) NOT NULL,
