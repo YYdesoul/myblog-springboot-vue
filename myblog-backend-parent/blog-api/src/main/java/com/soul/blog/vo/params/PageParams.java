@@ -15,8 +15,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PageParams {
 
+  @Builder.Default
   private int page = 1;
 
+  @Builder.Default
   private int pageSize = 10;
 
   private Long categoryId;

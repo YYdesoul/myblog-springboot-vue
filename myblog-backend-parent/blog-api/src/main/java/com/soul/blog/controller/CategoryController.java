@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("categorys")
-public class CategoryCntroller {
+public class CategoryController {
 
   @Autowired
   private CategoryService categoryService;

@@ -39,9 +39,9 @@ public class CommentsServiceImpl implements CommentsService {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getArticleId, id);
         queryWrapper.eq(Comment::getLevel, 1);
+        queryWrapper.orderByDesc(Comment::getCreateDate);
         List<Comment> commentList = commentsMapper.selectList(queryWrapper);
         List<CommentVo> commentVoList = copyList(commentList);
-
         return Result.success(commentVoList);
     }
 
@@ -64,11 +64,7 @@ public class CommentsServiceImpl implements CommentsService {
         }
         comment.setParentId(parent == null ? 0 : parent);
         Long toUserId = commentParam.getToUserId();
-        // 这里有问题
-        if (toUserId == null) {
-            toUserId = -1L;
-        }
-        comment.setToUid(toUserId);
+        comment.setToUid(toUserId == null ? 0 : toUserId);
         this.commentsMapper.insert(comment);
         return Result.success(null);
     }
@@ -84,6 +80,7 @@ public class CommentsServiceImpl implements CommentsService {
     private CommentVo copy(Comment comment) {
         CommentVo commentVo = new CommentVo();
         BeanUtils.copyProperties(comment, commentVo);
+        commentVo.setId(String.valueOf(comment.getId()));
         // 作者信息
         Long authorId = comment.getAuthorId();
         UserVo author = this.sysUserService.findUserVoById(authorId);

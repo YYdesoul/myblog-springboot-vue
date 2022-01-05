@@ -1,9 +1,11 @@
 package com.soul.blog.controller;
 
+import com.soul.blog.common.aop.LogAnnotation;
 import com.soul.blog.service.ArticleService;
 import com.soul.blog.vo.Result;
 import com.soul.blog.vo.params.ArticleParam;
 import com.soul.blog.vo.params.PageParams;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("articles")
+@Log4j2
 public class ArticleController {
 
   @Autowired
@@ -28,7 +31,9 @@ public class ArticleController {
    */
   @PostMapping
   //加上此注解 代表要对此接口记录日志
+  @LogAnnotation(module="文章", operator="获取文章列表")
   public Result listArticle(@RequestBody PageParams pageParams) {
+    log.info("pageParams is: " + pageParams.toString());
     return articleService.listArticle(pageParams);
   }
 
@@ -71,3 +76,4 @@ public class ArticleController {
     return articleService.publish(articleParam);
   }
 }
+
