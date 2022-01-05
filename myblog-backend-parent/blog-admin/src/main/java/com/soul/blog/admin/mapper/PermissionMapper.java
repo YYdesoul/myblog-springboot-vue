@@ -1,7 +1,9 @@
-package com.mszlu.blog.admin.mapper;
+package com.soul.blog.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.mszlu.blog.admin.pojo.Permission;
+import com.soul.blog.admin.pojo.Permission;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PermissionMapper extends BaseMapper<Permission> {
 }

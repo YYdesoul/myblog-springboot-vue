@@ -21,7 +21,7 @@ import {getToken} from '@/request/token'
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/write/:id?',

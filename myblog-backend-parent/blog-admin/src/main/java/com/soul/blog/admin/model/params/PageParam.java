@@ -1,8 +1,14 @@
-package com.mszlu.blog.admin.model.params;
+package com.soul.blog.admin.model.params;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PageParam {
 
     private Integer currentPage;
