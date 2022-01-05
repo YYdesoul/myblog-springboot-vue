@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TagVo {
 
-    private Long id;  // why not Long?
+    private String id;  // why not Long?
 
     private String tagName;
 

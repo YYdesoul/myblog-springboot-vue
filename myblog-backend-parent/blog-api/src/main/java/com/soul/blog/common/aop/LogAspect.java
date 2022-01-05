@@ -28,7 +28,7 @@ public class LogAspect {
   public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
     long beginTime = System.currentTimeMillis();
     // 执行方法
-    Object result = joinPoint.proceed();
+    Object result = joinPoint.proceed(); // 执行原方法
     // 执行时长(毫秒)
     long time = System.currentTimeMillis() - beginTime;
     // 保存日志

@@ -33,6 +33,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     BeanUtils.copyProperties(sysUser, userVo);
+    userVo.setId(String.valueOf(sysUser.getId()));
 
     return userVo;
   }
@@ -74,7 +75,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     // build LoginUserVo by sysUser
     LoginUserVo loginUserVo = LoginUserVo.builder()
-        .id(sysUser.getId())
+        .id(String.valueOf(sysUser.getId()))
         .nickname(sysUser.getNickname())
         .avatar(sysUser.getAvatar())
         .account(sysUser.getAccount())

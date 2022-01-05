@@ -28,6 +28,9 @@ public class UploadController {
     // 上传文件，上传到七牛云。与服务器按量付费，速度快，把图片放到离用户最近的服务器里
     // 降低我们自身应用服务器的贷款消耗
     boolean upload = qiniuUtils.upload(file, fileName);
-    return null;
+    if (upload) {
+      return Result.success(QiniuUtils.url + fileName);
+    }
+    return Result.fail(20001, "上传失败");
   }
 }

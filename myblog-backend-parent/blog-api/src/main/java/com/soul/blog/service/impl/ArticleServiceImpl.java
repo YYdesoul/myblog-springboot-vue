@@ -60,40 +60,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Result listArticle(PageParams pageParams) {
-        /**
-         * 1. 分页查询 article数据库表
-         */
-        Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        if (pageParams.getCategoryId() != null){
-            // and category_id=#{categoryId}
-            queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
-        }
-        List<Long> articleIdList = new ArrayList<>();
-        if (pageParams.getTagId() != null){
-            //加入标签 条件查询
-            //article表中 并没有tag字段 一篇文章 有多个标签
-            //article_tag  article_id 1 : n tag_id
-            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
-            List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
-            for (ArticleTag articleTag : articleTags) {
-                articleIdList.add(articleTag.getArticleId());
-            }
-            if (articleIdList.size() > 0){
-                // and id in(1,2,3)
-                queryWrapper.in(Article::getId,articleIdList);
-            }
-        }
-        //是否置顶进行排序
-        //order by create_date desc
-        queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        List<Article> records = articlePage.getRecords();
-        //能直接返回吗？ 很明显不能
-        List<ArticleVo> articleVoList = copyList(records,true,true);
-        log.info("articleVo List is: " + articleVoList);
-        return Result.success(articleVoList);
+      Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
+
+      IPage<Article> articleIPage = articleMapper.listArticle(
+          page,
+          pageParams.getCategoryId(),
+          pageParams.getTagId(),
+          pageParams.getYear(),
+          pageParams.getMonth());
+      List<Article> records = articleIPage.getRecords();
+      return Result.success(copyList(records,true,true));
     }
 
   @Override
@@ -163,7 +139,7 @@ public class ArticleServiceImpl implements ArticleService {
         .summary(articleParam.getSummary())
         .commentCounts(0)
         .createDate(System.currentTimeMillis())
-        .categoryId(articleParam.getCategory().getId())
+        .categoryId(Long.parseLong(articleParam.getCategory().getId()))
         .build();
     this.articleMapper.insert(article);
     // tag
@@ -172,7 +148,7 @@ public class ArticleServiceImpl implements ArticleService {
       for (TagVo tagVo : tagVos) {
         Long articleId = article.getId();
         ArticleTag articleTag = ArticleTag.builder()
-            .tagId(tagVo.getId())
+            .tagId(Long.parseLong(tagVo.getId()))
             .articleId(articleId)
             .build();
       articleTagMapper.insert(articleTag);
@@ -187,7 +163,7 @@ public class ArticleServiceImpl implements ArticleService {
     articleBodyMapper.insert(articleBody);
     article.setBodyId(articleBody.getId());
     articleMapper.updateById(article);
-    ArticleVo articleVo = ArticleVo.builder().id(article.getId()).build();
+    ArticleVo articleVo = ArticleVo.builder().id(String.valueOf(article.getId())).build();
     return Result.success(articleVo);
   }
 
@@ -227,6 +203,7 @@ public class ArticleServiceImpl implements ArticleService {
       boolean isBody, boolean isCategory) {
     ArticleVo articleVo = new ArticleVo();
     BeanUtils.copyProperties(article, articleVo);
+    articleVo.setId(String.valueOf(article.getId()));
 
     if (isTag) {
       List<TagVo> tagesByArticleId = tagService.findTagsByArticleId(article.getId());
