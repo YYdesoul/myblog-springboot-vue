@@ -1,0 +1,35 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+
+# spring conf.
+spring:
+  application:
+    name: myblog
+
+  # database conf.
+  datasource:
+    url: jdbc:mysql://172.17.0.2:3306/blog?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # redis conf.
+  redis:
+    host: 172.17.0.5
+    port: 6379
+
+  servlet:
+    multipart:
+      max-file-size: 2MB # 上传总文件的最大值
+      max-request-size: 20MB # 单个文件的最大值
+
+# mybatis-plus conf.
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  #    map-underscore-to-camel-case: true # 开启驼峰命名
+  global-config:
+    db-config:
+      table-prefix: ms_

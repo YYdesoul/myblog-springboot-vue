@@ -19,7 +19,9 @@ public class WebMVCConfig implements WebMvcConfigurer {
    */
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**").allowedOrigins("http://localhost:8081");
+    registry.addMapping("/**").allowedOrigins("*");
+//    registry.addMapping("/**").allowedOrigins("http://85.214.77.110:81");
+//    registry.addMapping("/**").allowedOrigins("http://localhost:81");
   }
 
   /**

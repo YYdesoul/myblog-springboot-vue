@@ -1,0 +1,70 @@
+version: "3.5"
+services:
+  myblog-mysql:
+    build:
+      context: ./blog_mysql
+    image: mysql
+    container_name: myblog-mysql
+    ports:
+      - 3307:3306
+    volumes:
+#      - ./blog_mysql/my.cnf:/etc/mysql/my.cnf
+      - ./blog_mysql/data:/var/lib/mysql
+      - ./blog_mysql/mysql-files:/var/lib/mysql-files
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    security_opt: # 不再会有不被允许的log
+      - seccomp:unconfined
+#    network_mode: "bridge"
+    networks:
+      - myblog
+
+
+  myblog-redis:
+    image: redis:6.2.6
+    container_name: myblog-redis
+    expose:
+      - 6379
+    networks:
+      - myblog
+
+
+  blog-api:
+    image: blog-api
+    container_name: blog-api
+    build:
+      context: ./blog-api
+    ports:
+      - 8887:8888
+#    network_mode: "bridge"
+    depends_on:
+      - myblog-mysql
+      - myblog-redis
+    links:
+      - myblog-mysql
+      - myblog-redis
+    networks:
+      - myblog
+
+
+  myblog-nginx:
+    image: nginx:1.21.5
+    container_name: myblog-nginx
+    ports:
+      - 81:80
+      - 443:443
+    links:
+      - blog-api
+    depends_on:
+      - blog-api
+    volumes:
+      - ./nginx/:/etc/nginx/
+      - ./blog-api/web:/myblog/web
+    networks:
+      - myblog
+
+
+networks:
+  myblog:
+    name: myblog_network
+    driver: bridge
