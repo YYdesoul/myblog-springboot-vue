@@ -29,5 +29,7 @@ $RECYCLE.BIN/
 myblog-backend-parent/.idea/
 myblog-frontend-vue/.idea/
 myblog-frontend-vue/node_modules/
+myblog-frontend-vue/dist/
+
 
 
