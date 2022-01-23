@@ -34,3 +34,4 @@ build/
 
 ### mysql data ###
 docker/blog_mysql/data/*
+docker/blog-api/blog-api.jar
