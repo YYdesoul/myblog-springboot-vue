@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+docker/blog-api/blog-api.jar
+
 
 ### STS ###
 .apt_generated
